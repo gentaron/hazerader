@@ -7,6 +7,7 @@ import path from "node:path";
 import { EW_ALPHA, localDate } from "./config.mjs";
 import { legacyPm25AqiToConc } from "./aqi.mjs";
 
+const MAX_STATION_KM = 40;
 const L1 = (x) => Math.log(Math.max(0, x) + 1);
 const E1 = (x) => Math.max(0, Math.exp(x) - 1);
 const ew = (old, x, n) => (old == null || n === 0 ? x : old + EW_ALPHA * (x - old));
@@ -32,6 +33,10 @@ export function truthByDate(lpmSeries, time) {
 
 export function updateStationBias(state, station, aq) {
   if (!station?.pm25Aqi || !station.time) return;
+  if (station.distanceKm == null || station.distanceKm > MAX_STATION_KM) {
+    console.warn(`[station] ignoring ${station.station} (${station.distanceKm?.toFixed(0) ?? "?"} km away)`);
+    return;
+  }
   const conc = legacyPm25AqiToConc(station.pm25Aqi);
   const hr = Math.floor(station.time / 3600) * 3600;
   const i = aq.time.indexOf(hr);
@@ -40,7 +45,7 @@ export function updateStationBias(state, station, aq) {
   state.stationBiasRaw = ew(state.stationBiasRaw, diff, state.stationN);
   state.stationN += 1;
   // Shrink towards zero until enough evidence has accumulated.
-  state.stationBiasLog = +(state.stationBiasRaw * Math.min(1, state.stationN / 7)).toFixed(4);
+  state.stationBiasLog = +(state.stationBiasRaw * Math.min(1, state.stationN / 4)).toFixed(4);
   state.lastStation = { ...station, pm25Conc: +conc.toFixed(1), camsAtHour: aq.pm2_5[i] };
 }
 

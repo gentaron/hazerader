@@ -75,7 +75,7 @@ async function writeFixtures(dir, nowIdx) {
   await fs.writeFile(path.join(dir, "air_quality.json"), JSON.stringify(aq));
   await fs.writeFile(path.join(dir, "weather.json"), JSON.stringify({ hourly }));
   await fs.writeFile(path.join(dir, "waqi.json"), JSON.stringify({
-    status: "ok", data: { aqi: 70, city: { name: "Putrajaya (synthetic)" },
+    status: "ok", data: { aqi: 70, city: { name: "Putrajaya (synthetic)", geo: [2.9166, 101.6917] },
       time: { iso: new Date((W.time[nowIdx - 1]) * 1000).toISOString() }, iaqi: { pm25: { v: 70 } } } }));
   await fs.writeFile(path.join(dir, "firms.csv"),
     "latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_ti5,frp,daynight\n"

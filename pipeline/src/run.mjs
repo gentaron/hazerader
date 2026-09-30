@@ -25,11 +25,18 @@ async function main() {
   const nowSec = Number(process.env.HZ_NOW ?? Math.floor(Date.now() / 1000));
   const today = localDate(nowSec);
 
-  // Once-per-day guard: the published forecast is only regenerated once per local day.
+  if (!Number.isFinite(SITE.lat) || !Number.isFinite(SITE.lon) || (SITE.lat === 0 && SITE.lon === 0)) {
+    throw new Error(`Invalid location ${SITE.lat},${SITE.lon}; check HZ_LAT / HZ_LON`);
+  }
+  console.log(`Location: ${SITE.name} (${SITE.lat}, ${SITE.lon})`);
+
+  // Once-per-day guard: the published forecast is only regenerated once per local day
+  // (unless it was issued for a different location).
   if (!process.env.HZ_FORCE) {
     try {
       const prev = JSON.parse(await fs.readFile(OUT, "utf8"));
-      if (prev.issueDate === today && !prev.demo) {
+      const sameSite = prev.location?.lat === SITE.lat && prev.location?.lon === SITE.lon;
+      if (prev.issueDate === today && !prev.demo && sameSite) {
         console.log(`Forecast for ${today} already issued at ${prev.generatedAt}; skipping.`);
         return;
       }

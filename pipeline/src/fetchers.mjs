@@ -22,6 +22,12 @@ async function getJSON(url, fixture, { retries = 3 } = {}) {
   throw lastErr;
 }
 
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const r = (d) => (d * Math.PI) / 180;
+  const a = Math.sin(r(lat2 - lat1) / 2) ** 2 + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(r(lon2 - lon1) / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(a));
+}
+
 async function getText(url, fixture) {
   if (MOCK_DIR) {
     try { return await fs.readFile(path.join(MOCK_DIR, `${fixture}.csv`), "utf8"); } catch { return null; }
@@ -82,7 +88,10 @@ export async function fetchStation() {
     const j = await getJSON(`https://api.waqi.info/feed/geo:${SITE.lat};${SITE.lon}/?token=${token}`, "waqi", { retries: 1 });
     if (j.status !== "ok") return null;
     const d = j.data;
+    const geo = d.city?.geo;
+    const distanceKm = Array.isArray(geo) ? haversineKm(SITE.lat, SITE.lon, +geo[0], +geo[1]) : null;
     return {
+      distanceKm,
       station: d.city?.name ?? "unknown",
       stationGeo: d.city?.geo ?? null,
       time: d.time?.iso ? Math.floor(Date.parse(d.time.iso) / 1000) : null, // UTC unix seconds
