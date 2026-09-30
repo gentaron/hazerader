@@ -46,3 +46,15 @@ export const CATEGORIES = [
   { max: 500, key: "hazardous", ja: "危険", color: "#7e0023" },
 ];
 export const category = (aqi) => CATEGORIES.find((c) => aqi <= c.max) ?? CATEGORIES.at(-1);
+
+// EPA NowCast for PM2.5 — the "current" AQI that real-time apps (AirNow, IQAir) display.
+// hourly: concentrations ordered oldest → newest, at least the last 12 hours.
+export function nowCastPm25(hourly) {
+  const c = hourly.slice(-12).reverse(); // c[0] = most recent hour
+  if (c.slice(0, 3).filter((v) => v != null).length < 2) return null;
+  const valid = c.filter((v) => v != null);
+  const w = Math.max(0.5, Math.min(...valid) / Math.max(...valid, 1e-6));
+  let num = 0, den = 0;
+  c.forEach((v, i) => { if (v != null) { num += w ** i * v; den += w ** i; } });
+  return num / den;
+}

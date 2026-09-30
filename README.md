@@ -33,7 +33,7 @@
 
 | Secret | 用途 |
 |---|---|
-| `WAQI_TOKEN` | 無料。最寄り DOE 局の実測値でバイアス補正（[aqicn.org/data-platform/token](https://aqicn.org/data-platform/token/)） |
+| `WAQI_TOKEN` | **強く推奨**・無料。最寄り DOE 局の実測値でバイアス補正（[aqicn.org/data-platform/token](https://aqicn.org/data-platform/token/)） |
 | `FIRMS_MAP_KEY` | 無料。NASA FIRMS の VIIRS 火災ホットスポット（[firms.modaps.eosdis.nasa.gov/api/map_key](https://firms.modaps.eosdis.nasa.gov/api/map_key/)） |
 
 座標を変えたい場合は Variables に `HZ_LAT` / `HZ_LON` を設定。

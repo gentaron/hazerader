@@ -24,6 +24,13 @@ async function load() {
 }
 
 function render(f) {
+  if (f.pending || !f.daily?.length) {
+    $("headline").textContent = "初回の予測を準備中です";
+    $("aqiCat").textContent = "データ待ち";
+    $("banner").hidden = false;
+    $("banner").textContent = "まだ実データでの予測が一度も実行されていません。GitHub の Actions →「Daily AQI forecast」→ Run workflow を実行するか、毎朝 06:17 (MYT) の自動実行をお待ちください。";
+    return;
+  }
   const d0 = f.daily[0];
   if (f.demo) {
     $("banner").hidden = false;
@@ -38,13 +45,13 @@ function render(f) {
   $("aqiCat").textContent = d0.aqi.category;
   $("aqiCat").style.color = CAT_COLORS[d0.aqi.key];
   $("aqiRange").textContent = `80%区間 AQI ${d0.aqiRange.low}–${d0.aqiRange.high}`;
-  $("heroDate").textContent = `${fmtDay(d0.date)} の24時間平均予測 (US AQI)`;
+  $("heroDate").textContent = `${fmtDay(d0.date)} の1日平均の予測 (US AQI・24時間平均)`;
   $("headline").textContent = f.narrative.headline;
   const kpi = (v, l) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`;
   $("kpis").innerHTML = [
     kpi(`${d0.pm25.p50}`, `PM2.5 µg/m³ (${d0.pm25.p10}–${d0.pm25.p90})`),
     kpi(pct(d0.pm25.probOver35), "AQI 100超の確率"),
-    kpi(f.current?.pm25 ?? "–", "現在の PM2.5 解析値"),
+    kpi(f.current?.nowcastAqi ?? "–", `いまのAQI（${f.current?.source ?? "CAMS解析値"}）`),
     kpi(f.bestWindow ? f.bestWindow.from.replace(/^(今日|明日) /, "$1 ") : "–", "外出おすすめ開始"),
   ].join("");
 

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { SITE, localDate, localHour } from "./config.mjs";
 import { fetchAirQuality, fetchWeather, fetchStation, fetchFires } from "./fetchers.mjs";
 import { runModel } from "./model.mjs";
-import { subIndex, category, ugToPpb } from "./aqi.mjs";
+import { subIndex, category, ugToPpb, nowCastPm25 } from "./aqi.mjs";
 import { normCdf } from "./linalg.mjs";
 import { dailyHaze, monsoonPhase, fireSummary } from "./haze.mjs";
 import { loadState, truthByDate, updateStationBias, verifyArchive, skillSummary } from "./verify.mjs";
@@ -124,11 +124,18 @@ async function main() {
 
   const season = monsoonPhase(month);
   const skill = skillSummary(state);
+  // "Right now" as real-time apps show it: EPA NowCast. A fresh ground-station reading wins over the model analysis.
+  const nowCast = (nowCastPm25(result.recent.map((r) => r.pm25)) ?? result.analysis.pm25) * Math.exp(result.stationBiasLog);
+  const st = state.lastStation;
+  const stationFresh = st?.time && station?.time === st.time && nowSec - st.time < 3 * 3600;
   const current = {
     t: result.analysis.t,
     pm25: r1(result.analysis.pm25 * Math.exp(result.stationBiasLog)),
-    aqi: subIndex("pm25_24h", avg(result.recent.slice(-24).map((r) => r.pm25 ?? 0)) * Math.exp(result.stationBiasLog)),
-    station: state.lastStation ?? null,
+    nowcastPm25: r1(stationFresh ? st.pm25Conc : nowCast),
+    nowcastAqi: stationFresh && st.pm25Aqi != null ? subIndex("pm25_24h", st.pm25Conc) : subIndex("pm25_24h", nowCast),
+    source: stationFresh ? `実測: ${st.station}` : "CAMS解析値",
+    aqi24h: subIndex("pm25_24h", avg(result.recent.slice(-24).map((r) => r.pm25 ?? 0)) * Math.exp(result.stationBiasLog)),
+    station: st ?? null,
   };
 
   const briefingInput = {
