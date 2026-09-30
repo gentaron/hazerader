@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HazeRadar</title>
+  <meta name="description" content="Mutiara Ville, Cyberjaya の大気汚染指数 (AQI) を AI アンサンブルで毎日予測">
+  <meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f6fb" media="(prefers-color-scheme: light)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="icons/icon.svg" alt="" width="28" height="28">
+      <div>
+        <h1>HazeRadar</h1>
+        <p class="loc" id="loc">Mutiara Ville, Cyberjaya</p>
+      </div>
+    </div>
+    <button id="install" class="ghost" hidden>インストール</button>
+  </header>
+
+  <main id="app">
+    <div id="banner" class="banner" hidden></div>
+
+    <section class="hero card" aria-live="polite">
+      <div class="gauge-wrap">
+        <svg id="gauge" viewBox="0 0 200 200" role="img" aria-label="今日のAQI"></svg>
+        <div class="gauge-center">
+          <span class="aqi-num" id="aqiNum">–</span>
+          <span class="aqi-cat" id="aqiCat">読み込み中</span>
+          <span class="aqi-range" id="aqiRange"></span>
+        </div>
+      </div>
+      <div class="hero-text">
+        <p class="eyebrow" id="heroDate">今日の予測 (US AQI)</p>
+        <h2 id="headline">…</h2>
+        <div class="kpis" id="kpis"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h3>AI 予報官の解説</h3>
+        <span class="chip" id="aiSource"></span>
+      </div>
+      <p id="summary" class="lead"></p>
+      <div class="advice" id="advice"></div>
+      <p class="muted small" id="confidence"></p>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h3>PM2.5 120時間予測</h3>
+        <div class="legend">
+          <span><i class="sw band"></i>80%予測区間</span>
+          <span><i class="sw line"></i>予測中央値</span>
+          <span><i class="sw cams"></i>CAMS単体</span>
+          <span><i class="sw past"></i>実況解析</span>
+        </div>
+      </div>
+      <div class="chart" id="chart"></div>
+      <p class="muted small">µg/m³。背景色は24時間平均換算の AQI 区分（9 / 35.4 / 55.4 / 125.4）。</p>
+    </section>
+
+    <section>
+      <h3 class="section-title">5日間予報</h3>
+      <div class="days" id="days"></div>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>ヘイズと気流</h3><span class="chip" id="season"></span></div>
+        <div class="haze">
+          <svg id="compass" viewBox="0 0 160 160" role="img" aria-label="上空850hPaの気流の向き"></svg>
+          <div id="hazeText"></div>
+        </div>
+        <p class="small" id="hazeComment"></p>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>汚染物質別 (今日)</h3></div>
+        <div id="pollutants"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h3>予測エンジンの中身</h3><span class="chip">毎日1回 自動学習</span></div>
+      <div class="grid2 inner">
+        <div>
+          <h4>ブレンド重み（リード日別）</h4>
+          <div id="weights"></div>
+          <h4>明日の主な要因</h4>
+          <div id="drivers"></div>
+        </div>
+        <div>
+          <h4>ホールドアウト検証（過去21日）</h4>
+          <div id="skill"></div>
+          <h4>自己検証の成績</h4>
+          <div id="verif"></div>
+        </div>
+      </div>
+    </section>
+
+    <details class="card method">
+      <summary>予測手法とデータソース</summary>
+      <ol>
+        <li><b>CAMS</b>（Copernicus 大気監視サービス / ECMWF）の化学輸送モデル予報：排出・化学反応・越境輸送を物理的に計算。</li>
+        <li><b>気象駆動の多ホライズン・リッジ回帰</b>：過去92日の時系列から、混合層高×風速（換気能）、降水、湿度、850hPa のモンスーン気流、日周期・週周期と PM2.5 の関係をリード時間ごとに学習。ECMWF・GFS・ICON の3つの数値予報で個別に駆動し、アンサンブル化。</li>
+        <li><b>減衰持続＋日周期モデル</b>：直近の水準と学習済みの日内変動。</li>
+        <li><b>逆MSE重み付けブレンド</b>：ホールドアウト検証と、毎日自動で行う過去予測の答え合わせ（指数加重）で重みを更新。予測区間の幅も検証結果で自動キャリブレーション。</li>
+        <li><b>地上観測によるバイアス補正</b>（WAQI トークン設定時）と <b>NASA FIRMS の火災ホットスポット</b>による風上火災負荷（キー設定時）。</li>
+        <li><b>Claude</b> が数値結果を読み、根拠つきの日本語解説と健康アドバイスを作成。</li>
+      </ol>
+      <p class="small muted">データ: Open-Meteo (CAMS / ECMWF / NOAA GFS / DWD ICON)、任意で WAQI・NASA FIRMS。AQI は US EPA 2024 基準。これは研究・情報提供目的の予測で、公式の DOE (APIMS) 発表の代わりにはなりません。</p>
+    </details>
+  </main>
+
+  <footer class="foot">
+    <span id="issued"></span>
+    <span>予測は毎朝1回だけ更新されます</span>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

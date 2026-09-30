@@ -1,0 +1,14 @@
+{
+  "name": "hazerader-pipeline",
+  "private": true,
+  "type": "module",
+  "description": "Daily AQI forecast pipeline for Mutiara Ville, Cyberjaya",
+  "scripts": {
+    "forecast": "node src/run.mjs",
+    "test": "node test/offline.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.129.0"
+  }
+}
