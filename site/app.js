@@ -36,7 +36,7 @@ function render(f) {
     $("banner").hidden = false;
     $("banner").textContent = "これは合成データによるデモ表示です。GitHub Actions の初回実行後に実データへ置き換わります。";
   }
-  $("loc").textContent = f.location.name;
+  $("loc").textContent = `${f.location.name}（${f.location.lat.toFixed(4)}, ${f.location.lon.toFixed(4)}）`;
   $("issued").textContent = `発表: ${new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium", timeStyle: "short", timeZone: TZ }).format(new Date(f.generatedAt))} (MYT)`;
 
   // Hero
