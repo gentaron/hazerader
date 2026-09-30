@@ -3,11 +3,11 @@
 **Mutiara Ville, Cyberjaya** の大気汚染指数（US AQI）を、AI アンサンブルで毎日1回予測する PWA。
 
 - 📱 PWA（ホーム画面に追加、オフライン表示対応）
-- 🕕 毎朝 06:17 (MYT) に GitHub Actions で1日1回だけ更新
+- 🕕 毎朝 06:17 (MYT) に GitHub Actions で1日1回だけ更新 → コミットを受けて Netlify が自動再デプロイ
 - 📈 PM2.5 の120時間予測（80% 予測区間つき）と5日間の AQI・AQI 100 超の確率
 - 🔥 ヘイズ診断（850hPa の気流の起源、モンスーン期、風上の火災ホットスポット）
 - 🤖 予測モデルの要因分析から、日本語の解説と健康アドバイスを自動生成
-- 💸 **完全無料**：有料 API なし・依存パッケージなし。無料の Open-Meteo と公開リポジトリの GitHub Actions / Pages だけで動く
+- 💸 **完全無料**：有料 API なし・依存パッケージなし。無料の Open-Meteo と公開リポジトリの GitHub Actions と Netlify 無料枠だけで動く
 - 🔁 自分の過去予測を毎日答え合わせして、ブレンド重みと予測区間の幅を自動で学習
 
 ## 予測エンジン
@@ -28,7 +28,7 @@
 ## セットアップ
 
 1. このブランチを `main` にマージ
-2. **Settings → Pages → Source** を「GitHub Actions」に
+2. Netlify でこのリポジトリを連携（`netlify.toml` で公開ディレクトリ `site/` を指定済み。ビルド不要）
 3. （任意）**Settings → Secrets and variables → Actions** に無料キーを追加。なくても動くけど、入れるほど賢くなる
 
 | Secret | 用途 |
