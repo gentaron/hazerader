@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "members": {},
+ "verified": [],
+ "log": [],
+ "sigmaScale": 1,
+ "z2": null,
+ "zN": 0,
+ "stationBiasLog": -0.0019,
+ "stationBiasRaw": -0.013109181582815044,
+ "stationN": 1,
+ "lastStation": {
+  "station": "Centro de Arte, Canarias, Spain",
+  "stationGeo": [
+   28.500254999777,
+   -13.852395000294
+  ],
+  "time": 1790766000,
+  "pm25Aqi": 55,
+  "pm10Aqi": 50,
+  "aqi": 15,
+  "pm25Conc": 14,
+  "camsAtHour": 14.2
+ }
+}
