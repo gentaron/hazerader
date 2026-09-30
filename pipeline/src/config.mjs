@@ -21,8 +21,6 @@ export const RIDGE_LAMBDAS = [0.03, 0.1, 0.3, 1, 3, 10, 30, 100];
 export const EW_ALPHA = 0.12;
 export const PRIOR_PSEUDO_COUNT = 6;
 
-export const CLAUDE_MODEL = process.env.HZ_CLAUDE_MODEL ?? "claude-opus-5-5";
-
 export const localDate = (unixSec) =>
   new Date((unixSec + SITE.utcOffsetHours * 3600) * 1000).toISOString().slice(0, 10);
 export const localHour = (unixSec) =>

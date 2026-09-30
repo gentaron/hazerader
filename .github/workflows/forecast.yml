@@ -31,16 +31,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: pipeline/package-lock.json
-      - run: npm ci
-        working-directory: pipeline
       - name: Run forecast pipeline
         working-directory: pipeline
         run: node src/run.mjs
         env:
           HZ_FORCE: ${{ inputs.force && '1' || '' }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           WAQI_TOKEN: ${{ secrets.WAQI_TOKEN }}
           FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
           HZ_LAT: ${{ vars.HZ_LAT }}
