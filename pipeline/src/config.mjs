@@ -1,9 +1,9 @@
 // Location & model configuration. Everything here can be overridden via env vars.
 export const SITE = {
-  name: "Mutiara Ville, Cyberjaya",
-  // Approximate coordinates of Mutiara Ville (Cyberjaya, Selangor).
-  lat: Number(process.env.HZ_LAT ?? 2.9213),
-  lon: Number(process.env.HZ_LON ?? 101.6559),
+  name: "Mutiara Ville, Cyberjaya, Selangor, Malaysia",
+  // Mutiara Ville, Jalan Union, Cyber 11, 63000 Cyberjaya, Sepang, Selangor, Malaysia.
+  lat: Number(process.env.HZ_LAT || 2.9242),
+  lon: Number(process.env.HZ_LON || 101.6334),
   tz: "Asia/Kuala_Lumpur",
   utcOffsetHours: 8,
 };
