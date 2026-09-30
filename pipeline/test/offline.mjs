@@ -83,7 +83,6 @@ async function writeFixtures(dir, nowIdx) {
 }
 
 const env = { ...process.env, HZ_DATA: path.join(tmp, "data"), HZ_OUT: path.join(tmp, "site/forecast.json"), HZ_FORCE: "1" };
-delete env.ANTHROPIC_API_KEY;
 let out;
 for (let d = 0; d < DAYS_SIM; d++) {
   const nowIdx = (92 + d) * 24 + 22 + 6;   // ~06:00 local

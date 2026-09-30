@@ -50,7 +50,7 @@ function render(f) {
 
   // AI briefing
   const n = f.narrative;
-  $("aiSource").textContent = n.source === "template" ? "定型文" : `AI: ${n.source}`;
+  $("aiSource").textContent = "予測モデルの要因分析から自動生成";
   $("summary").textContent = n.summary;
   const adv = (t, v) => `<div><b>${t}</b>${esc(v)}</div>`;
   $("advice").innerHTML = adv("一般の方", n.advice.general) + adv("敏感な方（子ども・高齢者・呼吸器/心疾患）", n.advice.sensitive)

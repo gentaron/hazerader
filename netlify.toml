@@ -1,0 +1,20 @@
+# The PWA lives in site/; there is no build step.
+[build]
+  publish = "site"
+  command = ""
+
+# Always revalidate the daily forecast and the service worker so updates show up immediately.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
