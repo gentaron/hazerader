@@ -6,9 +6,9 @@
  "sigmaScale": 1,
  "z2": null,
  "zN": 0,
- "stationBiasLog": 0.0006,
- "stationBiasRaw": 0.002245586326924176,
- "stationN": 1,
+ "stationBiasLog": 0.0074,
+ "stationBiasRaw": 0.014732106835664708,
+ "stationN": 2,
  "lastStation": {
   "distanceKm": 6.376965238350811,
   "station": "Putrajaya, W.p. Putrajaya, Malaysia",
@@ -16,11 +16,11 @@
    2.914816,
    101.69005
   ],
-  "time": 1790780400,
-  "pm25Aqi": 158,
-  "pm10Aqi": 64,
-  "aqi": 154,
-  "pm25Conc": 69.1,
-  "camsAtHour": 68.9
+  "time": 1790812800,
+  "pm25Aqi": 136,
+  "pm10Aqi": 52,
+  "aqi": 152,
+  "pm25Conc": 49.7,
+  "camsAtHour": 44.6
  }
 }
