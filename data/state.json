@@ -1,14 +1,42 @@
 {
  "version": 1,
- "members": {},
- "verified": [],
- "log": [],
+ "members": {
+  "d1": {
+   "cams": {
+    "mse": 0.0003,
+    "n": 1
+   },
+   "met": {
+    "mse": 0.01108,
+    "n": 1
+   },
+   "clim": {
+    "mse": 0.00139,
+    "n": 1
+   }
+  }
+ },
+ "verified": [
+  "2026-09-30|2026-10-01"
+ ],
+ "log": [
+  {
+   "issued": "2026-09-30",
+   "date": "2026-10-01",
+   "lead": 1,
+   "truth": 47.3,
+   "blend": 47.2,
+   "cams": 48.2,
+   "persistence": 51.1,
+   "inBand": true
+  }
+ ],
  "sigmaScale": 1,
- "z2": null,
- "zN": 0,
- "stationBiasLog": 0.0074,
- "stationBiasRaw": 0.014732106835664708,
- "stationN": 2,
+ "z2": 0.00010506401851501611,
+ "zN": 1,
+ "stationBiasLog": 0.0021,
+ "stationBiasRaw": 0.0027845262944264718,
+ "stationN": 3,
  "lastStation": {
   "distanceKm": 6.376965238350811,
   "station": "Putrajaya, W.p. Putrajaya, Malaysia",
@@ -16,11 +44,11 @@
    2.914816,
    101.69005
   ],
-  "time": 1790812800,
-  "pm25Aqi": 136,
-  "pm10Aqi": 52,
-  "aqi": 152,
-  "pm25Conc": 49.7,
-  "camsAtHour": 44.6
+  "time": 1790902800,
+  "pm25Aqi": 76,
+  "pm10Aqi": 27,
+  "aqi": 79,
+  "pm25Conc": 24,
+  "camsAtHour": 26.2
  }
 }
