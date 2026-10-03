@@ -3,21 +3,37 @@
  "members": {
   "d1": {
    "cams": {
-    "mse": 0.0003,
+    "mse": 0.00232,
+    "n": 2
+   },
+   "met": {
+    "mse": 0.01023,
+    "n": 2
+   },
+   "clim": {
+    "mse": 0.01261,
+    "n": 2
+   }
+  },
+  "d2": {
+   "cams": {
+    "mse": 0.01215,
     "n": 1
    },
    "met": {
-    "mse": 0.01108,
+    "mse": 0.00623,
     "n": 1
    },
    "clim": {
-    "mse": 0.00139,
+    "mse": 0.0574,
     "n": 1
    }
   }
  },
  "verified": [
-  "2026-09-30|2026-10-01"
+  "2026-09-30|2026-10-01",
+  "2026-09-30|2026-10-02",
+  "2026-10-01|2026-10-02"
  ],
  "log": [
   {
@@ -29,14 +45,34 @@
    "cams": 48.2,
    "persistence": 51.1,
    "inBand": true
+  },
+  {
+   "issued": "2026-09-30",
+   "date": "2026-10-02",
+   "lead": 2,
+   "truth": 36,
+   "blend": 38.7,
+   "cams": 32.2,
+   "persistence": 51.1,
+   "inBand": true
+  },
+  {
+   "issued": "2026-10-01",
+   "date": "2026-10-02",
+   "lead": 1,
+   "truth": 36,
+   "blend": 39.5,
+   "cams": 31.5,
+   "persistence": 54.7,
+   "inBand": true
   }
  ],
  "sigmaScale": 1,
- "z2": 0.00010506401851501611,
- "zN": 1,
- "stationBiasLog": 0.0021,
- "stationBiasRaw": 0.0027845262944264718,
- "stationN": 3,
+ "z2": 0.009336788321661453,
+ "zN": 3,
+ "stationBiasLog": 0.0101,
+ "stationBiasRaw": 0.010058463798797799,
+ "stationN": 4,
  "lastStation": {
   "distanceKm": 6.376965238350811,
   "station": "Putrajaya, W.p. Putrajaya, Malaysia",
@@ -44,11 +80,11 @@
    2.914816,
    101.69005
   ],
-  "time": 1790902800,
-  "pm25Aqi": 76,
-  "pm10Aqi": 27,
-  "aqi": 79,
-  "pm25Conc": 24,
-  "camsAtHour": 26.2
+  "time": 1790989200,
+  "pm25Aqi": 120,
+  "pm10Aqi": 52,
+  "aqi": 76,
+  "pm25Conc": 43.2,
+  "camsAtHour": 40.5
  }
 }
