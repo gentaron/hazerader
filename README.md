@@ -53,3 +53,15 @@ cd ../site && python3 -m http.server   # http://localhost:8000
 
 これは研究・情報提供目的の予測です。公式の大気質情報は DOE の [APIMS](https://eqms.doe.gov.my/APIMS/main) を確認してください。
 学習・検証の「正解」は、地上局を設定しない限り CAMS の解析値です。
+
+<!-- ecosystem:begin (自動生成: gentaron/infocollect の ecosystem/registry.json から。手で直さない) -->
+
+## つながり
+
+gentaron のリポジトリ群のうち **データと研究** の一つ。Cyberjaya の大気汚染指数（US AQI）を AI アンサンブルで毎日予測する PWA。
+
+- **同じ島**: [QAIZ](https://github.com/gentaron/QAIZ)、[Mathematical-Physics-Lab-](https://github.com/gentaron/Mathematical-Physics-Lab-)
+
+全体の地図 → [ecosystem](https://github.com/gentaron/infocollect/blob/HEAD/ecosystem/README.md)
+
+<!-- ecosystem:end -->

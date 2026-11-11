@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/ecosystem/schema.json",
+  "schema": 1,
+  "name": "hazerader",
+  "group": "data",
+  "groupLabel": "データと研究",
+  "status": "active",
+  "role": "Cyberjaya の大気汚染指数（US AQI）を AI アンサンブルで毎日予測する PWA",
+  "stack": "Node · Netlify · GitHub Actions",
+  "produces": [
+    "aqi"
+  ],
+  "consumes": [],
+  "upstream": [],
+  "downstream": [],
+  "siblings": [
+    "QAIZ",
+    "Mathematical-Physics-Lab-"
+  ],
+  "hub": {
+    "repo": "https://github.com/gentaron/infocollect",
+    "map": "https://github.com/gentaron/infocollect/blob/HEAD/ecosystem/README.md",
+    "kb": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/docs/kb",
+    "mcp": [
+      "infocollect-kb",
+      "forge"
+    ]
+  }
+}
