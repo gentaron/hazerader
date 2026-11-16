@@ -1,7 +1,7 @@
 // App shell cached for offline use; forecast data is network-first with a cached fallback.
-const SHELL = "hazerader-shell-v1";
+const SHELL = "hazerader-shell-v2";
 const DATA = "hazerader-data";
-const ASSETS = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"];
+const ASSETS = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "./icons/eureka/icon-192.png", "./icons/eureka/icon-512.png", "./icons/eureka/icon-maskable-192.png", "./icons/eureka/icon-maskable-512.png", "./icons/eureka/favicon.ico", "./icons/eureka/apple-touch-icon.png", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(SHELL).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
