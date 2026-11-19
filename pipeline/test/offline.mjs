@@ -9,6 +9,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { NWP_MODELS } from "../src/config.mjs";
+import { fitTargetAwarePca } from "../src/linalg.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const RUN = path.join(here, "../src/run.mjs");
@@ -82,6 +83,27 @@ async function writeFixtures(dir, nowIdx) {
     + Array.from({ length: 120 }, () => `${(-1 + 3 * rnd()).toFixed(3)},${(101 + 3 * rnd()).toFixed(3)},330,0.4,0.4,2026-09-01,0600,N,VIIRS,n,2.0NRT,290,${(5 + 40 * rnd()).toFixed(1)},D`).join("\n"));
 }
 
+function compareReductions() {
+  let s = 7;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) % 2 ** 32) / 2 ** 32);
+  const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(2 * Math.PI * rnd());
+  const p = 16, n = 320, train = 240;
+  const load = Array.from({ length: p }, () => Array.from({ length: 4 }, gauss));
+  const data = Array.from({ length: n }, () => {
+    const f = Array.from({ length: 4 }, gauss);
+    return {
+      x: load.map((l) => l[0] * f[0] + l[1] * f[1] + l[2] * f[2] + 0.12 * l[3] * f[3] + 0.3 * gauss()),
+      y: 3 + 0.15 * f[0] - 0.2 * f[1] + 0.35 * f[3] + 0.05 * gauss(),
+    };
+  });
+  const Xtr = data.slice(0, train).map((d) => d.x), ytr = data.slice(0, train).map((d) => d.y);
+  const Xva = data.slice(train).map((d) => d.x), yva = data.slice(train).map((d) => d.y);
+  const pca = fitTargetAwarePca(Xtr, ytr, 5, false);
+  const tar = fitTargetAwarePca(Xtr, ytr, 5, true);
+  const mae = (m) => Xva.reduce((sum, x, i) => sum + Math.abs(m.predict(x) - yva[i]), 0) / Xva.length;
+  return { pca: mae(pca), tar: mae(tar) };
+}
+
 const env = { ...process.env, HZ_DATA: path.join(tmp, "data"), HZ_OUT: path.join(tmp, "site/forecast.json"), HZ_FORCE: "1" };
 let out;
 for (let d = 0; d < DAYS_SIM; d++) {
@@ -100,7 +122,11 @@ assert(out.daily.every((d) => d.aqi.value >= 0 && d.aqi.value <= 500), "AQI rang
 assert(out.model.verifiedForecasts > 0, "verification ran");
 const w = out.model.leadDayWeights[0].weights;
 assert(Math.abs(w.cams + w.met + w.clim - 1) < 1e-9, "weights normalised");
+const reduction = compareReductions(), repeat = compareReductions();
+assert(Number.isFinite(reduction.pca) && Number.isFinite(reduction.tar), "reduction MAE finite");
+assert(reduction.pca === repeat.pca && reduction.tar === repeat.tar, "reduction MAE reproducible");
 console.log("\nHold-out skill:", out.model.holdoutSkill.map((s) => `${s.lead}h:${s.skillVsPersistence}`).join(" "));
+console.log(`Reduction MAE: PCA ${reduction.pca.toFixed(4)} vs correlation-weighted ${reduction.tar.toFixed(4)}`);
 console.log("Verification:", JSON.stringify(out.model.verification));
 console.log("Day-1 weights:", JSON.stringify(w));
 console.log("Haze day0:", JSON.stringify(out.daily[0].haze));
