@@ -7,6 +7,7 @@ import { fetchAirQuality, fetchWeather, fetchStation, fetchFires } from "./fetch
 import { runModel } from "./model.mjs";
 import { subIndex, category, ugToPpb, nowCastPm25 } from "./aqi.mjs";
 import { normCdf } from "./linalg.mjs";
+import { discoveryItpdParents } from "./discovery.mjs";
 import { dailyHaze, monsoonPhase, fireSummary } from "./haze.mjs";
 import { loadState, truthByDate, updateStationBias, verifyArchive, skillSummary } from "./verify.mjs";
 import { writeNarrative } from "./narrative.mjs";
@@ -52,6 +53,18 @@ async function main() {
   updateStationBias(state, station, aq);
 
   const result = runModel({ aq, wx, nowSec, state });
+  const wxVars = wx.models[result.modelNames[0]] ?? {};
+  const wxIndex = new Map(wx.time.map((t, i) => [t, i]));
+  const wxAt = (key) => aq.time.map((t) => wxVars[key]?.[wxIndex.get(t)] ?? null);
+  const itpdParents = discoveryItpdParents(result.analysis.lpmSeries, [
+    { name: "pm10_lag1", values: aq.pm10 },
+    { name: "aod_lag1", values: aq.aerosol_optical_depth },
+    { name: "rh_lag1", values: wxAt("relative_humidity_2m") },
+    { name: "wind_lag1", values: wxAt("wind_speed_10m") },
+    { name: "rain_lag1", values: wxAt("precipitation") },
+    { name: "blh_lag1", values: wxAt("boundary_layer_height") },
+  ], 4);
+  console.log("ITPD parents:", itpdParents.join(", "));
   await verifyArchive(state, ARCHIVE, truthByDate(result.analysis.lpmSeries, result.analysis.time));
 
   // ---- Daily aggregation (local time) ----
